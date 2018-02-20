@@ -6,7 +6,7 @@ node_js:
 cache: npm
 
 before_script:
-  - echo "PRISMA_STAGE=prod PRISMA_ENDPOINT=${PRISMA_ENDPOINT} PRISMA_CLUSTER=${PRISMA_CLUSTER} > .env
+  - echo PRISMA_STAGE=prod PRISMA_ENDPOINT=${PRISMA_ENDPOINT} PRISMA_CLUSTER=${PRISMA_CLUSTER} > .env
 
 script: npm run deploy
 after_script: npm run alias
