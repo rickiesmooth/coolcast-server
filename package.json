@@ -2,7 +2,8 @@
   "name": "hackernews-graphql-js",
   "scripts": {
     "start": "node -r dotenv/config src/index.js",
-    "deploy": "now --token $NOW_TOKEN -e PRISMA_ENDPOINT=$PRISMA_ENDPOINT -e PRISMA_CLUSTER=$PRISMA_CLUSTER",
+    "deploy":
+      "now --token $NOW_TOKEN -e PRISMA_ENDPOINT=$PRISMA_ENDPOINT -e PRISMA_CLUSTER=$PRISMA_CLUSTER -e PRISMA_STAGE=prod",
     "dev": "npm-run-all --parallel start playground",
     "alias": "now alias --token=$NOW_TOKEN",
     "playground": "graphql playground"
