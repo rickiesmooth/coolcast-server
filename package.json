@@ -16,8 +16,8 @@
     "prisma-binding": "1.4.0"
   },
   "now": {
-    "name": "graphcool-server",
-    "alias": "graphcool-server"
+    "name": "coolcast-server",
+    "alias": "coolcast-server"
   },
   "devDependencies": {
     "graphql-cli": "2.12.4",
