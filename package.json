@@ -1,5 +1,5 @@
 {
-  "name": "hackernews-graphql-js",
+  "name": "coolcast-server",
   "scripts": {
     "start": "node -r dotenv/config src/index.js",
     "deploy": "now --token $NOW_TOKEN --dotenv",
