@@ -1,5 +1,6 @@
 # Coolcast server
 [![Build Status](https://travis-ci.org/rickiesmooth/coolcast-server.svg?branch=master)](https://travis-ci.org/rickiesmooth/coolcast-server)
+
 This repository contains the GraphQL server for the [**Coolcast app**](https://github.com/rickiesmooth/coolcast)
 
 ## Usage
