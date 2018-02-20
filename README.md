@@ -1,14 +1,14 @@
-# hackernews-graphql-js
-
-This repository contains the final project for the [**GraphQL.js tutorial**](https://www.howtographql.com/graphql-js/0-introduction/) on [How to GraphQL](https://www.howtographql.com/). Note that it also serves as foundation for all frontend tutorials on the site.
+# Coolcast server
+[![Build Status](https://travis-ci.org/rickiesmooth/coolcast-server.svg?branch=master)](https://travis-ci.org/rickiesmooth/coolcast-server)
+This repository contains the GraphQL server for the [**Coolcast app**](https://github.com/rickiesmooth/coolcast)
 
 ## Usage
 
 ### 1. Clone repository
 
 ```sh
-git clone https://github.com/howtographql/graphql-js
-cd graphql-js
+git clone https://github.com/rickiesmooth/coolcast-server
+cd coolcast-server
 ```
 
 ### 2. Deploy the Prisma database service
