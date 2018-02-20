@@ -3,6 +3,7 @@
 type Query {
   me: User!
   users: [User!]!
+  user(userId: ID!): User!
   shows(id: ID!): [Show!]
   playlists(id: ID!): [Playlist!]
   plays: [PodcastPlay!]!

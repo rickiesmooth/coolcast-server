@@ -16,5 +16,8 @@ module.exports = {
   },
   users: async (parent, args, ctx, info) => {
     return ctx.db.query.users(null, '{ id name playlists {id name} }')
+  },
+  user: async (parent, { userId }, ctx, info) => {
+    return ctx.db.query.user({ where: { id: userId } }, info)
   }
 }
