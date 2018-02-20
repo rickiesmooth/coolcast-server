@@ -1,0 +1,54 @@
+type Show {
+  id: ID! @unique
+  title: String!
+  showId: String! @unique
+  thumbLarge: String!
+  episodes: [Episode!]!
+}
+
+type Episode {
+  id: ID! @unique
+  title: String!
+  date: DateTime!
+  description: String!
+  src: String!
+  plays: [PodcastPlay!]!
+  show: [Show!]!
+}
+
+type PodcastPlay {
+  id: ID! @unique
+  user: User!
+  progress: Float! @default(value: "0.0")
+  episode: Episode!
+}
+
+type UserHistory {
+  id: ID! @unique
+  shows: [UserHistoryShow!]!
+  user: User! @relation(name: "UserHistoryCollection")
+}
+
+# want to aggregate playCount https://github.com/graphcool/prisma/issues/1780
+type UserHistoryShow {
+  id: ID! @unique
+  show: Show!
+  plays: [PodcastPlay!]!
+}
+
+type Playlist {
+  id: ID! @unique
+  user: User!
+  name: String!
+  episodes: [Episode!]!
+}
+
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  fbid: String! @unique
+  history: UserHistory @relation(name: "UserHistoryCollection")
+  plays: [PodcastPlay!]!
+  playlists: [Playlist!]!
+}
