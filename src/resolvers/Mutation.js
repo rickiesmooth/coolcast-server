@@ -154,10 +154,37 @@ function addPlaylist(parent, { name }, ctx, info) {
   )
 }
 
+async function followUser(parent, { userId }, ctx, info) {
+  const currentUserId = getUserId(ctx)
+  console.log('✨userId', userId)
+  ctx.db.mutation.updateUser(
+    {
+      where: { id: userId },
+      data: {
+        followers: {
+          connect: { id: currentUserId }
+        }
+      }
+    },
+    info
+  )
+  return ctx.db.mutation.updateUser(
+    {
+      where: { id: currentUserId },
+      data: {
+        following: {
+          connect: { id: userId }
+        }
+      }
+    },
+    info
+  )
+}
+
 async function removePlaylist(parent, { id }, ctx, info) {
   const userId = getUserId(ctx)
   console.log('✨userId', userId) // check if owns playlist
-  return ctx.db.mutation.deletePlaylist({ where: { id } }, '{ id }')
+  return ctx.db.mutation.deletePlaylist({ where: { id } }, info)
 }
 
 function updatePlay(parent, { sessionId, progress }, ctx, info) {
@@ -188,8 +215,12 @@ module.exports = {
   authenticate,
   getPodcast,
   addPlay,
+  followUser,
   addPlaylist,
   updatePlaylist,
   removePlaylist,
-  updatePlay
+  updatePlay,
+  deleteUser: (parent, { userId }, ctx, info) => {
+    return ctx.db.mutation.deleteUser({ where: { id: userId } }, '{ id }')
+  }
 }

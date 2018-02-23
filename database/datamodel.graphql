@@ -26,7 +26,7 @@ type PodcastPlay {
 type UserHistory {
   id: ID! @unique
   shows: [UserHistoryShow!]!
-  user: User! @relation(name: "UserHistoryCollection")
+  user: User
 }
 
 # want to aggregate playCount https://github.com/graphcool/prisma/issues/1780
@@ -48,7 +48,9 @@ type User {
   name: String!
   email: String! @unique
   fbid: String! @unique
-  history: UserHistory @relation(name: "UserHistoryCollection")
+  history: UserHistory
   plays: [PodcastPlay!]!
+  following: [User!]! @relation(name: "FollowRelation")
+  followers: [User!]! @relation(name: "FollowRelation")
   playlists: [Playlist!]!
 }

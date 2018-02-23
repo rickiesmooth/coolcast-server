@@ -44,13 +44,15 @@ type User implements Node {
   fbid: String!
   history(where: UserHistoryWhereInput): UserHistory
   plays(where: PodcastPlayWhereInput, orderBy: PodcastPlayOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PodcastPlay!]
+  following(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  followers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   playlists(where: PlaylistWhereInput, orderBy: PlaylistOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Playlist!]
 }
 
 type UserHistory implements Node {
   id: ID!
   shows(where: UserHistoryShowWhereInput, orderBy: UserHistoryShowOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserHistoryShow!]
-  user(where: UserWhereInput): User!
+  user(where: UserWhereInput): User
 }
 
 type UserHistoryShow implements Node {
@@ -999,7 +1001,19 @@ input UserCreateInput {
   fbid: String!
   history: UserHistoryCreateOneWithoutUserInput
   plays: PodcastPlayCreateManyWithoutUserInput
+  following: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFollowingInput
   playlists: PlaylistCreateManyWithoutUserInput
+}
+
+input UserCreateManyWithoutFollowersInput {
+  create: [UserCreateWithoutFollowingInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateManyWithoutFollowingInput {
+  create: [UserCreateWithoutFollowingInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneWithoutHistoryInput {
@@ -1017,11 +1031,22 @@ input UserCreateOneWithoutPlaysInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutFollowingInput {
+  name: String!
+  email: String!
+  fbid: String!
+  history: UserHistoryCreateOneWithoutUserInput
+  plays: PodcastPlayCreateManyWithoutUserInput
+  playlists: PlaylistCreateManyWithoutUserInput
+}
+
 input UserCreateWithoutHistoryInput {
   name: String!
   email: String!
   fbid: String!
   plays: PodcastPlayCreateManyWithoutUserInput
+  following: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFollowingInput
   playlists: PlaylistCreateManyWithoutUserInput
 }
 
@@ -1031,6 +1056,8 @@ input UserCreateWithoutPlaylistsInput {
   fbid: String!
   history: UserHistoryCreateOneWithoutUserInput
   plays: PodcastPlayCreateManyWithoutUserInput
+  following: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFollowingInput
 }
 
 input UserCreateWithoutPlaysInput {
@@ -1038,6 +1065,8 @@ input UserCreateWithoutPlaysInput {
   email: String!
   fbid: String!
   history: UserHistoryCreateOneWithoutUserInput
+  following: UserCreateManyWithoutFollowersInput
+  followers: UserCreateManyWithoutFollowingInput
   playlists: PlaylistCreateManyWithoutUserInput
 }
 
@@ -1054,7 +1083,7 @@ type UserHistoryConnection {
 
 input UserHistoryCreateInput {
   shows: UserHistoryShowCreateManyInput
-  user: UserCreateOneWithoutHistoryInput!
+  user: UserCreateOneWithoutHistoryInput
 }
 
 input UserHistoryCreateOneWithoutUserInput {
@@ -1310,7 +1339,27 @@ input UserUpdateInput {
   fbid: String
   history: UserHistoryUpdateOneWithoutUserInput
   plays: PodcastPlayUpdateManyWithoutUserInput
+  following: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFollowingInput
   playlists: PlaylistUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyWithoutFollowersInput {
+  create: [UserCreateWithoutFollowingInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithoutFollowingInput!]
+  upsert: [UserUpsertWithoutFollowingInput!]
+}
+
+input UserUpdateManyWithoutFollowingInput {
+  create: [UserCreateWithoutFollowingInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithoutFollowingInput!]
+  upsert: [UserUpsertWithoutFollowingInput!]
 }
 
 input UserUpdateOneWithoutHistoryInput {
@@ -1340,11 +1389,27 @@ input UserUpdateOneWithoutPlaysInput {
   upsert: UserUpsertWithoutPlaysInput
 }
 
+input UserUpdateWithoutFollowingDataInput {
+  name: String
+  email: String
+  fbid: String
+  history: UserHistoryUpdateOneWithoutUserInput
+  plays: PodcastPlayUpdateManyWithoutUserInput
+  playlists: PlaylistUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutFollowingInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutFollowingDataInput!
+}
+
 input UserUpdateWithoutHistoryDataInput {
   name: String
   email: String
   fbid: String
   plays: PodcastPlayUpdateManyWithoutUserInput
+  following: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFollowingInput
   playlists: PlaylistUpdateManyWithoutUserInput
 }
 
@@ -1359,6 +1424,8 @@ input UserUpdateWithoutPlaylistsDataInput {
   fbid: String
   history: UserHistoryUpdateOneWithoutUserInput
   plays: PodcastPlayUpdateManyWithoutUserInput
+  following: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFollowingInput
 }
 
 input UserUpdateWithoutPlaylistsInput {
@@ -1371,12 +1438,20 @@ input UserUpdateWithoutPlaysDataInput {
   email: String
   fbid: String
   history: UserHistoryUpdateOneWithoutUserInput
+  following: UserUpdateManyWithoutFollowersInput
+  followers: UserUpdateManyWithoutFollowingInput
   playlists: PlaylistUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutPlaysInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutPlaysDataInput!
+}
+
+input UserUpsertWithoutFollowingInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutFollowingDataInput!
+  create: UserCreateWithoutFollowingInput!
 }
 
 input UserUpsertWithoutHistoryInput {
@@ -1460,6 +1535,12 @@ input UserWhereInput {
   plays_every: PodcastPlayWhereInput
   plays_some: PodcastPlayWhereInput
   plays_none: PodcastPlayWhereInput
+  following_every: UserWhereInput
+  following_some: UserWhereInput
+  following_none: UserWhereInput
+  followers_every: UserWhereInput
+  followers_some: UserWhereInput
+  followers_none: UserWhereInput
   playlists_every: PlaylistWhereInput
   playlists_some: PlaylistWhereInput
   playlists_none: PlaylistWhereInput

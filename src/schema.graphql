@@ -12,10 +12,12 @@ type Query {
 type Mutation {
   authenticate(facebookToken: String!): AuthPayload!
   getPodcast(showId: String!): Show!
+  followUser(userId: ID!): User
   addPlay(episodeId: ID!, showId: String!, sessionId: ID): PodcastPlay!
   addPlaylist(name: String!): Playlist!
   updatePlaylist(playlistId: ID!, episodeId: ID!): Playlist!
   removePlaylist(id: ID!): Playlist!
+  deleteUser(userId: ID!): ID!
   updatePlay(sessionId: ID!, progress: Float!): PodcastPlay!
 }
 
@@ -29,7 +31,9 @@ type User {
   name: String!
   email: String!
   fbid: String!
+  following: [User]
+  followers: [User] 
   history: UserHistory
   plays: [PodcastPlay!]!
-  playlists: [Playlist!]
+  playlists: [Playlist]
 }

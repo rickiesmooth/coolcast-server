@@ -7,6 +7,8 @@ const Mutation = require('./resolvers/Mutation')
 
 const resolvers = { Query, Mutation }
 
+console.log('✨process.env.PRISMA_ENDPOINT', process.env.PRISMA_ENDPOINT)
+
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers,
