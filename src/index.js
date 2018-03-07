@@ -1,13 +1,14 @@
 require('isomorphic-fetch')
 
 const { GraphQLServer } = require('graphql-yoga')
-const { Prisma } = require('prisma-binding')
+const { Prisma, extractFragmentReplacements } = require('prisma-binding')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
+// const User = require('./resolvers/User')
 
 const resolvers = { Query, Mutation }
 
-console.log('✨process.env.PRISMA_ENDPOINT', process.env.PRISMA_ENDPOINT)
+const fragmentReplacements = extractFragmentReplacements({ Query })
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
@@ -15,6 +16,7 @@ const server = new GraphQLServer({
   context: req => ({
     ...req,
     db: new Prisma({
+      fragmentReplacements,
       typeDefs: 'src/generated/prisma.graphql',
       endpoint: process.env.PRISMA_ENDPOINT,
       secret: process.env.PRISMA_SECRET

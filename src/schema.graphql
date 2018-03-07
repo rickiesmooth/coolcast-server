@@ -1,17 +1,24 @@
-# import Show, Episode, PodcastPlay, UserHistory, Playlist from "./generated/prisma.graphql"
+# import Episode, Show, PodcastPlay, UserHistory, Playlist from "./generated/prisma.graphql"
 
+type UserShow {
+  id: ID!
+  title: String!
+  showId: String!
+  thumbLarge: String!
+  episodes: [Episode!]
+  episodesWithPlays: [Episode!]!
+  onlyEpisodesWithHistory: [Episode]
+}
 type Query {
-  me: User!
+  me: User
   users: [User!]!
   user(userId: ID!): User!
-  shows(id: ID!): [Show!]
-  playlists(id: ID!): [Playlist!]
-  plays: [PodcastPlay!]!
+  show(showId: String!): UserShow!
+  playlist(id: ID!): Playlist!
 }
 
 type Mutation {
   authenticate(facebookToken: String!): AuthPayload!
-  getPodcast(showId: String!): Show!
   followUser(userId: ID!): User
   addPlay(episodeId: ID!, showId: String!, sessionId: ID): PodcastPlay!
   addPlaylist(name: String!): Playlist!
@@ -32,8 +39,9 @@ type User {
   email: String!
   fbid: String!
   following: [User]
-  followers: [User] 
+  followers: [User]
   history: UserHistory
+  onlyEpisodesWithHistory: [Episode]
   plays: [PodcastPlay!]!
   playlists: [Playlist]
 }

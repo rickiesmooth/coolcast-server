@@ -1,17 +1,12 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { APP_SECRET, getUserId } = require('../utils')
-const GET_FEED_URL =
-  'https://us-central1-personal-180010.cloudfunctions.net/getFeed'
-
-const API_URL = 'https://itunes.apple.com'
 
 function getPrismaUser(ctx, fbid) {
   return ctx.db.query.user({ where: { fbid } })
 }
 
 async function createPrismaUser(ctx, facebookUser) {
-  console.log('✨facebookUser', facebookUser)
   const user = await ctx.db.mutation.createUser({
     data: {
       fbid: facebookUser.id,
@@ -54,41 +49,11 @@ async function authenticate(parent, { facebookToken }, ctx, info) {
   }
 }
 
-async function getPodcast(parent, { showId }, ctx, info) {
-  const show = await ctx.db.query.show({ where: { showId } }, info)
-  if (!show) {
-    const { results } = await global
-      .fetch(`${API_URL}/lookup?id=${showId}`)
-      .then(res => res.json())
-    const episodes = await global
-      .fetch(`${GET_FEED_URL}?url=${results[0].feedUrl}`)
-      .then(res => res.json())
-      .catch(error => console.error('Error:', error))
-    console.log('✨episodes', episodes.length)
-    return ctx.db.mutation.createShow(
-      {
-        data: {
-          title: encodeURI(results[0].collectionName),
-          showId,
-          thumbLarge: results[0].artworkUrl600,
-          episodes: {
-            create: episodes
-          }
-        }
-      },
-      info
-    )
-  } else if (show.episodes.length < 1) {
-    console.log('✨ no episodes?????')
-  } else {
-    return show
-  }
-}
-
 async function addPlay(parent, { episodeId, showId, sessionId }, ctx, info) {
   const userId = getUserId(ctx)
 
   if (sessionId) {
+    console.log('✨sessionId', sessionId)
     // for src
     return ctx.db.query.podcastPlay({ where: { id: sessionId } }, info)
   }
@@ -213,7 +178,6 @@ function updatePlaylist(parent, { playlistId, episodeId }, ctx, info) {
 
 module.exports = {
   authenticate,
-  getPodcast,
   addPlay,
   followUser,
   addPlaylist,
